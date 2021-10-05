@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="@dimen/margin_auth_screen"
-    tools:context=".MainActivity">
-
+    tools:context=".ui.MainActivity">
 
     <TextView
         android:id="@+id/textView"
@@ -70,8 +69,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_login_button"
         android:text="@string/registration"
-
-
         app:layout_constraintEnd_toStartOf="@+id/forgot_pass_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
