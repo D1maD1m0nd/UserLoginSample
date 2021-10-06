@@ -4,6 +4,7 @@ import com.example.userloginsample.constants.AuthState
 import com.example.userloginsample.constants.LoginState
 import com.example.userloginsample.constants.PasswordState
 import com.example.userloginsample.constants.RegexValidateConstants
+import com.example.userloginsample.domain.User
 import com.example.userloginsample.impl.UserRepository
 import com.example.userloginsample.impl.UserRepositoryImpl
 
@@ -56,7 +57,7 @@ class EditAuthPresenter : Contract.Presenter {
         val validateAuthResult = validateLoginData(login, password)
         if (validateAuthResult) {
             val user = repo.getUserData(login, password)
-
+            checkUser(user)
         }
     }
 
@@ -72,4 +73,11 @@ class EditAuthPresenter : Contract.Presenter {
         return validateLoginResult != LoginState.INCORRECT_LOGIN && validatePasswordResult != PasswordState.INCORRECT_PASSWORD
     }
 
+    private fun checkUser(user: User?) {
+        if (user == null) {
+            view?.setState(AuthState.ERROR)
+        } else {
+            view?.setState(AuthState.SUCCESS)
+        }
+    }
 }

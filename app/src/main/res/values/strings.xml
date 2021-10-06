@@ -8,4 +8,6 @@
     <string name="registration">регистрация</string>
     <string name="IncorectPasswordError">Некоректный пароль! Пароль должен состоять из не менее 5 любых символов без пробелов</string>
     <string name="LoginIncorrectError">Логин должен состоять не менее чем из 4 символов и начинаться с не цифрового символа</string>
+    <string name="userNotFound">ERROR указанный пользователь не найден</string>
+    <string name="AuthSuccessMessage">Авторизация прошла успешно</string>
 </resources>

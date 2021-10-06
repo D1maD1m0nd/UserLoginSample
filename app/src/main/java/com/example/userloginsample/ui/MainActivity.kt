@@ -1,8 +1,13 @@
 package com.example.userloginsample.ui
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.postDelayed
+import androidx.core.view.isVisible
 import com.example.userloginsample.R
 import com.example.userloginsample.constants.AuthState
 import com.example.userloginsample.constants.LoginState
@@ -56,8 +61,41 @@ class MainActivity : AppCompatActivity(), Contract.View {
         }
     }
 
-    override fun setState(state: AuthState) {
-        TODO("Not yet implemented")
+    override fun setState(state: AuthState) = with(binding) {
+        when (state) {
+            AuthState.IDLE -> contentLayout.isVisible = true
+            AuthState.ERROR -> this@MainActivity.onStateError()
+            AuthState.SUCCESS -> this@MainActivity.onStateSuccess()
+            else -> null
+        }
+    }
+
+    private fun onStateError() = with(binding) {
+        contentLayout.isVisible = false
+        progressBar.isVisible = true
+        Handler(Looper.getMainLooper()).postDelayed(3000) {
+            contentLayout.isVisible = true
+            progressBar.isVisible = false
+            Toast.makeText(
+                this@MainActivity,
+                getString(R.string.userNotFound),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    private fun onStateSuccess() = with(binding) {
+        contentLayout.isVisible = false
+        progressBar.isVisible = true
+        Handler(Looper.getMainLooper()).postDelayed(3000) {
+            contentLayout.isVisible = false
+            progressBar.isVisible = false
+            Toast.makeText(
+                this@MainActivity,
+                getString(R.string.AuthSuccessMessage),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 
     override fun setPasswordError(code: PasswordState) = with(binding) {
@@ -67,4 +105,6 @@ class MainActivity : AppCompatActivity(), Contract.View {
     override fun setLoginError(code: LoginState) = with(binding) {
         loginEditText.error = getString(R.string.LoginIncorrectError)
     }
+
+
 }

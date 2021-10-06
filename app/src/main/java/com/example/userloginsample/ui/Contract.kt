@@ -6,7 +6,7 @@ import com.example.userloginsample.constants.PasswordState
 
 class Contract {
     interface View {
-        fun setState(state: AuthState)
+        fun setState(state: AuthState): Any?
         fun setPasswordError(code: PasswordState)
         fun setLoginError(code: LoginState)
 
