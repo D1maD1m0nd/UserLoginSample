@@ -1,12 +1,14 @@
 package com.example.userloginsample.ui
 
 import com.example.userloginsample.constants.AuthState
+import com.example.userloginsample.constants.LoginState
+import com.example.userloginsample.constants.PasswordState
 
 class Contract {
     interface View {
         fun setState(state: AuthState)
-        fun setPasswordError(code: Int)
-        fun setLoginError(code: Int)
+        fun setPasswordError(code: PasswordState)
+        fun setLoginError(code: LoginState)
 
     }
 

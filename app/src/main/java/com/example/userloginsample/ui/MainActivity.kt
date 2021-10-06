@@ -2,9 +2,11 @@ package com.example.userloginsample.ui
 
 import android.os.Bundle
 import android.widget.EditText
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.userloginsample.R
 import com.example.userloginsample.constants.AuthState
+import com.example.userloginsample.constants.LoginState
+import com.example.userloginsample.constants.PasswordState
 import com.example.userloginsample.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity(), Contract.View {
@@ -25,21 +27,29 @@ class MainActivity : AppCompatActivity(), Contract.View {
     }
 
     private fun initView() = with(binding) {
-        loginEditText.setOnFocusChangeListener { v, hasFocus: Boolean ->
-            if (!hasFocus) {
-                val editTextView = v as EditText
-                presenter.onChangeLogin(editTextView.text.toString())
-                Toast.makeText(this@MainActivity, "HAS Focus", Toast.LENGTH_SHORT).show()
-            }
+        initPasswordChangeListener()
+        initLoginChangeListener()
+        setOnLoginButtonClickListener()
+    }
+
+    private fun setOnLoginButtonClickListener() = with(binding) {
+        loginButton.setOnClickListener {
         }
+    }
+
+    private fun initPasswordChangeListener() = with(binding) {
         passwordEditText.setOnFocusChangeListener { v, hasFocus: Boolean ->
             if (!hasFocus) {
-                val editTextView = v as EditText
-                presenter.onChangePassword(editTextView.text.toString())
-                Toast.makeText(this@MainActivity, "HAS Focus", Toast.LENGTH_SHORT).show()
+                presenter.onChangePassword((v as EditText).text.toString())
             }
         }
-        loginButton.setOnClickListener {
+    }
+
+    private fun initLoginChangeListener() = with(binding) {
+        loginEditText.setOnFocusChangeListener { v, hasFocus: Boolean ->
+            if (!hasFocus) {
+                presenter.onChangeLogin((v as EditText).text.toString())
+            }
         }
     }
 
@@ -47,11 +57,11 @@ class MainActivity : AppCompatActivity(), Contract.View {
         TODO("Not yet implemented")
     }
 
-    override fun setPasswordError(code: Int) {
-        TODO("Not yet implemented")
+    override fun setPasswordError(code: PasswordState) = with(binding) {
+        passwordEditText.error = getString(R.string.IncorectPasswordError)
     }
 
-    override fun setLoginError(code: Int) {
-        TODO("Not yet implemented")
+    override fun setLoginError(code: LoginState) = with(binding) {
+        loginEditText.error = getString(R.string.LoginIncorrectError)
     }
 }

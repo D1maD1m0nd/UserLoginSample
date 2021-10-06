@@ -2,10 +2,13 @@ package com.example.userloginsample.ui
 
 import com.example.userloginsample.constants.LoginState
 import com.example.userloginsample.constants.PasswordState
+import com.example.userloginsample.constants.RegexValidateConstants
 
 class EditAuthPresenter : Contract.Presenter {
+    private var view: Contract.View? = null
+
     override fun onAttach(view: Contract.View) {
-        TODO("Not yet implemented")
+        this.view = view
     }
 
     override fun onDetach() {
@@ -13,23 +16,35 @@ class EditAuthPresenter : Contract.Presenter {
     }
 
     override fun onChangeLogin(login: String) {
-        validateLogin(login)
+        val state = validateLogin(login)
+        if (state != LoginState.SUCCESS) {
+            view?.setLoginError(state)
+        }
     }
 
     private fun validateLogin(login: String): LoginState {
-        if (login.isEmpty()) {
-            return LoginState.EMPTY_LOGIN_ERROR
+        val isCorrect = Regex(RegexValidateConstants.CORRECT_LOGIN.value).matches(login)
+        return when {
+            isCorrect -> LoginState.SUCCESS
+            else -> LoginState.INCORRECT_LOGIN
         }
-        return LoginState.SUCCESS
     }
 
 
     override fun onChangePassword(password: String) {
-        validatePassword(password)
+        val state = validatePassword(password)
+        if (state != PasswordState.SUCCESS) {
+            view?.setPasswordError(state)
+        }
+
     }
 
     private fun validatePassword(password: String): PasswordState {
-        return PasswordState.SUCCESS
+        val isCorrect = Regex(RegexValidateConstants.CORRECT_PASSWORD.value).matches(password)
+        return when {
+            isCorrect -> PasswordState.SUCCESS
+            else -> PasswordState.INCORRECT_PASSWORD
+        }
     }
 
     override fun onLogin() {
