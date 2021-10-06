@@ -17,6 +17,6 @@ class Contract {
         fun onDetach()
         fun onChangeLogin(login: String)
         fun onChangePassword(password: String)
-        fun onLogin()
+        fun onLogin(login: String, password: String)
     }
 }

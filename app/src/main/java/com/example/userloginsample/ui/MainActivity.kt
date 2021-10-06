@@ -34,6 +34,9 @@ class MainActivity : AppCompatActivity(), Contract.View {
 
     private fun setOnLoginButtonClickListener() = with(binding) {
         loginButton.setOnClickListener {
+            val login = loginEditText.text.toString()
+            val password = passwordEditText.text.toString()
+            presenter.onLogin(login, password)
         }
     }
 

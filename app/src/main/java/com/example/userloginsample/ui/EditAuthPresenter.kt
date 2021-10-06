@@ -1,18 +1,23 @@
 package com.example.userloginsample.ui
 
+import com.example.userloginsample.constants.AuthState
 import com.example.userloginsample.constants.LoginState
 import com.example.userloginsample.constants.PasswordState
 import com.example.userloginsample.constants.RegexValidateConstants
+import com.example.userloginsample.impl.UserRepository
+import com.example.userloginsample.impl.UserRepositoryImpl
 
 class EditAuthPresenter : Contract.Presenter {
     private var view: Contract.View? = null
+    private var repo: UserRepository = UserRepositoryImpl()
 
     override fun onAttach(view: Contract.View) {
         this.view = view
+        view.setState(AuthState.IDLE)
     }
 
     override fun onDetach() {
-        TODO("Not yet implemented")
+        view = null
     }
 
     override fun onChangeLogin(login: String) {
@@ -47,7 +52,24 @@ class EditAuthPresenter : Contract.Presenter {
         }
     }
 
-    override fun onLogin() {
-        TODO("Not yet implemented")
+    override fun onLogin(login: String, password: String) {
+        val validateAuthResult = validateLoginData(login, password)
+        if (validateAuthResult) {
+            val user = repo.getUserData(login, password)
+
+        }
     }
+
+    private fun validateLoginData(login: String, password: String): Boolean {
+        val validateLoginResult = validateLogin(login)
+        val validatePasswordResult = validatePassword(password)
+        if (validateLoginResult != LoginState.SUCCESS) {
+            view?.setLoginError(validateLoginResult)
+        }
+        if (validatePasswordResult != PasswordState.SUCCESS) {
+            view?.setPasswordError(validatePasswordResult)
+        }
+        return validateLoginResult != LoginState.INCORRECT_LOGIN && validatePasswordResult != PasswordState.INCORRECT_PASSWORD
+    }
+
 }
