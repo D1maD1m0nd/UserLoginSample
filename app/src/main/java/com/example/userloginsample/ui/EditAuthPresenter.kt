@@ -9,7 +9,7 @@ import com.example.userloginsample.impl.UserRepository
 import com.example.userloginsample.impl.UserRepositoryImpl
 
 class EditAuthPresenter : Contract.Presenter {
-    private var view: Contract.View? = null
+    private lateinit var view: Contract.View
     private var repo: UserRepository = UserRepositoryImpl()
     private var state: AuthState = AuthState.IDLE
     override fun onAttach(view: Contract.View) {
@@ -18,13 +18,12 @@ class EditAuthPresenter : Contract.Presenter {
     }
 
     override fun onDetach() {
-        view = null
     }
 
     override fun onChangeLogin(login: String) {
         val state = validateLogin(login)
         if (state != LoginState.SUCCESS) {
-            view?.setLoginError(state)
+            view.setLoginError(state)
         }
     }
 
@@ -40,7 +39,7 @@ class EditAuthPresenter : Contract.Presenter {
     override fun onChangePassword(password: String) {
         val state = validatePassword(password)
         if (state != PasswordState.SUCCESS) {
-            view?.setPasswordError(state)
+            view.setPasswordError(state)
         }
 
     }
@@ -65,10 +64,10 @@ class EditAuthPresenter : Contract.Presenter {
         val validateLoginResult = validateLogin(login)
         val validatePasswordResult = validatePassword(password)
         if (validateLoginResult != LoginState.SUCCESS) {
-            view?.setLoginError(validateLoginResult)
+            view.setLoginError(validateLoginResult)
         }
         if (validatePasswordResult != PasswordState.SUCCESS) {
-            view?.setPasswordError(validatePasswordResult)
+            view.setPasswordError(validatePasswordResult)
         }
         return validateLoginResult != LoginState.INCORRECT_LOGIN && validatePasswordResult != PasswordState.INCORRECT_PASSWORD
     }
@@ -79,7 +78,7 @@ class EditAuthPresenter : Contract.Presenter {
         } else {
             AuthState.SUCCESS
         }
-        view?.setState(state)
+        view.setState(state)
         this.state = state
     }
 }
