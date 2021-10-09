@@ -32,11 +32,10 @@ class MainActivity : AppCompatActivity(), Contract.View {
     }
 
     private fun initPresenter() {
-        if (lastNonConfigurationInstance is EditAuthPresenter) {
+        if (lastCustomNonConfigurationInstance is EditAuthPresenter) {
             presenter = lastCustomNonConfigurationInstance as EditAuthPresenter
-        } else {
-            presenter.onAttach(this)
         }
+        presenter.onAttach(this)
     }
 
     private fun initView() = with(binding) {
@@ -82,13 +81,13 @@ class MainActivity : AppCompatActivity(), Contract.View {
         contentLayout.isVisible = false
         progressBar.isVisible = true
         Handler(Looper.getMainLooper()).postDelayed(3000) {
-            contentLayout.isVisible = true
-            progressBar.isVisible = false
             Toast.makeText(
                 this@MainActivity,
                 getString(R.string.userNotFound),
                 Toast.LENGTH_SHORT
             ).show()
+            contentLayout.isVisible = true
+            progressBar.isVisible = false
         }
     }
 

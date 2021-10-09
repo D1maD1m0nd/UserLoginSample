@@ -11,10 +11,10 @@ import com.example.userloginsample.impl.UserRepositoryImpl
 class EditAuthPresenter : Contract.Presenter {
     private var view: Contract.View? = null
     private var repo: UserRepository = UserRepositoryImpl()
-
+    private var state: AuthState = AuthState.IDLE
     override fun onAttach(view: Contract.View) {
         this.view = view
-        view.setState(AuthState.IDLE)
+        view.setState(state)
     }
 
     override fun onDetach() {
@@ -57,7 +57,7 @@ class EditAuthPresenter : Contract.Presenter {
         val validateAuthResult = validateLoginData(login, password)
         if (validateAuthResult) {
             val user = repo.getUserData(login, password)
-            checkUser(user)
+            isNullUser(user)
         }
     }
 
@@ -73,11 +73,13 @@ class EditAuthPresenter : Contract.Presenter {
         return validateLoginResult != LoginState.INCORRECT_LOGIN && validatePasswordResult != PasswordState.INCORRECT_PASSWORD
     }
 
-    private fun checkUser(user: User?) {
-        if (user == null) {
-            view?.setState(AuthState.ERROR)
+    private fun isNullUser(user: User?) {
+        val state = if (user == null) {
+            AuthState.ERROR
         } else {
-            view?.setState(AuthState.SUCCESS)
+            AuthState.SUCCESS
         }
+        view?.setState(state)
+        this.state = state
     }
 }
