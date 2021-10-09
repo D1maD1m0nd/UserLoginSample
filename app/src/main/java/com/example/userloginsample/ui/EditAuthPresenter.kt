@@ -6,11 +6,10 @@ import com.example.userloginsample.constants.PasswordState
 import com.example.userloginsample.constants.RegexValidateConstants
 import com.example.userloginsample.domain.User
 import com.example.userloginsample.impl.UserRepository
-import com.example.userloginsample.impl.UserRepositoryImpl
 
 class EditAuthPresenter : Contract.Presenter {
     private lateinit var view: Contract.View
-    private var repo: UserRepository = UserRepositoryImpl()
+    private var repo: UserRepository = App.userRepository
     private var state: AuthState = AuthState.IDLE
     override fun onAttach(view: Contract.View) {
         this.view = view
