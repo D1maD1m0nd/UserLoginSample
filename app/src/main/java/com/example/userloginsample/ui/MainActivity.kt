@@ -44,7 +44,6 @@ class MainActivity : AppCompatActivity(), Contract.View {
         } else {
             presenter.onAttach(this)
         }
-
     }
 
     private fun initView() = with(binding) {
