@@ -23,6 +23,13 @@ class MainActivity : AppCompatActivity(), Contract.View {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        if (savedInstanceState == null) {
+            presenter.onAttach(this)
+        } else {
+
+            presenter = lastCustomNonConfigurationInstance as EditAuthPresenter
+        }
+
         init()
     }
 
@@ -96,6 +103,10 @@ class MainActivity : AppCompatActivity(), Contract.View {
                 Toast.LENGTH_SHORT
             ).show()
         }
+    }
+
+    override fun onRetainCustomNonConfigurationInstance(): Any {
+        return presenter
     }
 
     override fun setPasswordError(code: PasswordState) = with(binding) {
