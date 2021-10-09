@@ -16,7 +16,7 @@ import com.example.userloginsample.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity(), Contract.View {
     private lateinit var binding: ActivityMainBinding
-    private var presenter: Contract.Presenter = EditAuthPresenter()
+    private lateinit var presenter: Contract.Presenter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,8 +32,10 @@ class MainActivity : AppCompatActivity(), Contract.View {
     }
 
     private fun initPresenter() {
-        if (lastCustomNonConfigurationInstance is EditAuthPresenter) {
-            presenter = lastCustomNonConfigurationInstance as EditAuthPresenter
+        presenter = if (lastCustomNonConfigurationInstance is EditAuthPresenter) {
+            lastCustomNonConfigurationInstance as EditAuthPresenter
+        } else {
+            EditAuthPresenter()
         }
         presenter.onAttach(this)
     }
@@ -80,7 +82,7 @@ class MainActivity : AppCompatActivity(), Contract.View {
     private fun onStateError() = with(binding) {
         contentLayout.isVisible = false
         progressBar.isVisible = true
-        Handler(Looper.getMainLooper()).postDelayed(3000) {
+        Handler(Looper.getMainLooper()).postDelayed(DELAY_TIME) {
             Toast.makeText(
                 this@MainActivity,
                 getString(R.string.userNotFound),
@@ -94,18 +96,18 @@ class MainActivity : AppCompatActivity(), Contract.View {
     private fun onStateSuccess() = with(binding) {
         contentLayout.isVisible = false
         progressBar.isVisible = true
-        Handler(Looper.getMainLooper()).postDelayed(3000) {
-            contentLayout.isVisible = false
-            progressBar.isVisible = false
+        Handler(Looper.getMainLooper()).postDelayed(DELAY_TIME) {
             Toast.makeText(
                 this@MainActivity,
                 getString(R.string.AuthSuccessMessage),
                 Toast.LENGTH_SHORT
             ).show()
+            contentLayout.isVisible = false
+            progressBar.isVisible = false
         }
     }
 
-    override fun onRetainCustomNonConfigurationInstance(): Any {
+    override fun onRetainCustomNonConfigurationInstance(): Any? {
         return presenter
     }
 
@@ -117,5 +119,8 @@ class MainActivity : AppCompatActivity(), Contract.View {
         loginEditText.error = getString(R.string.LoginIncorrectError)
     }
 
+    companion object {
+        const val DELAY_TIME = 3000L
+    }
 
 }
