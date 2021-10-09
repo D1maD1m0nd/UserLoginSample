@@ -23,13 +23,6 @@ class MainActivity : AppCompatActivity(), Contract.View {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        if (savedInstanceState == null) {
-            presenter.onAttach(this)
-        } else {
-
-            presenter = lastCustomNonConfigurationInstance as EditAuthPresenter
-        }
-
         init()
     }
 
