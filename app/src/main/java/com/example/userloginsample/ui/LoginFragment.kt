@@ -26,6 +26,12 @@ class LoginFragment : Fragment(), Contract.View {
 
     private var presenter: Contract.Presenter = EditAuthPresenter()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // Retain this fragment across configuration changes.
+        retainInstance = true
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -37,13 +43,10 @@ class LoginFragment : Fragment(), Contract.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        init()
-    }
-
-    private fun init() {
         initPresenter()
         initView()
     }
+
 
     private fun initView() = with(binding) {
         initPasswordChangeListener()
