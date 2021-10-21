@@ -1,4 +1,4 @@
-package com.example.userloginsample.ui
+package com.example.userloginsample.ui.login
 
 import android.os.Bundle
 import android.os.Handler
@@ -16,6 +16,7 @@ import com.example.userloginsample.constants.AuthState
 import com.example.userloginsample.constants.LoginState
 import com.example.userloginsample.constants.PasswordState
 import com.example.userloginsample.databinding.FragmentLoginBinding
+import com.example.userloginsample.ui.App
 
 
 class LoginFragment : Fragment(), Contract.View {
@@ -24,7 +25,7 @@ class LoginFragment : Fragment(), Contract.View {
     private val binding: FragmentLoginBinding
         get() = _binding!!
 
-    private var presenter: Contract.Presenter = EditAuthPresenter()
+    private var presenter: Contract.Presenter = EditAuthPresenter(App.INSTANCE.router)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -131,6 +132,7 @@ class LoginFragment : Fragment(), Contract.View {
             ).show()
             contentLayout.isVisible = false
             progressBar.isVisible = false
+            presenter.onOpenGitHubUserScreen()
         }
     }
 

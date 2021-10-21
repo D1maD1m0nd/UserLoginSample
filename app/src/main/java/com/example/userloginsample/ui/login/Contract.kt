@@ -1,4 +1,4 @@
-package com.example.userloginsample.ui
+package com.example.userloginsample.ui.login
 
 import com.example.userloginsample.constants.AuthState
 import com.example.userloginsample.constants.LoginState
@@ -13,6 +13,7 @@ class Contract {
     }
 
     interface Presenter {
+        fun onOpenGitHubUserScreen()
         fun onAttach(view: View)
         fun onDetach()
         fun onChangeLogin(login: String)

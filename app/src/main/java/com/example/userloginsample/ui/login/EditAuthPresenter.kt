@@ -1,16 +1,19 @@
-package com.example.userloginsample.ui
+package com.example.userloginsample.ui.login
 
-import com.example.userloginsample.constants.AuthState
-import com.example.userloginsample.constants.LoginState
-import com.example.userloginsample.constants.PasswordState
-import com.example.userloginsample.constants.RegexValidateConstants
+import com.example.userloginsample.constants.*
 import com.example.userloginsample.domain.User
 import com.example.userloginsample.impl.UserRepository
+import com.example.userloginsample.ui.App
+import com.github.terrakok.cicerone.Router
 
-class EditAuthPresenter : Contract.Presenter {
+class EditAuthPresenter(private val router: Router) : Contract.Presenter {
     private lateinit var view: Contract.View
     private var repo: UserRepository = App.userRepository
     private var state: AuthState = AuthState.IDLE
+    override fun onOpenGitHubUserScreen() {
+        router.navigateTo(Screens.gitHubUsers())
+    }
+
     override fun onAttach(view: Contract.View) {
         this.view = view
         view.setState(state)
