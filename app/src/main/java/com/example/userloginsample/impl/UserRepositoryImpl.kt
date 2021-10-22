@@ -11,7 +11,7 @@ class UserRepositoryImpl : UserRepository {
         return getUsers().findLast { it.login == login && it.password == password }
     }
 
-    private fun getUsers() = listOf(
+    fun getUsers() = listOf(
         User("Dima123", "31dsa!#"),
         User("Kostya123", "31221d!!2sssss"),
         User("Qwerty", "qwerty123!"),
