@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.userloginsample.databinding.FragmentGitHubBinding
@@ -16,9 +15,11 @@ import com.example.userloginsample.ui.githubusers.adapter.GitHubUsersAdapter
 import com.example.userloginsample.ui.githubusers.contract.Contract
 import com.example.userloginsample.ui.githubusers.contract.OnItemViewClickListener
 import com.example.userloginsample.ui.githubusers.contract.UserPresenter
+import moxy.MvpAppCompatFragment
+import moxy.ktx.moxyPresenter
 
 
-class GitHubFragment : Fragment(), Contract.MainView {
+class GitHubFragment : MvpAppCompatFragment(), Contract.UsersView {
     private var _binding: FragmentGitHubBinding? = null
     private val binding: FragmentGitHubBinding
         get() = _binding!!
@@ -28,18 +29,16 @@ class GitHubFragment : Fragment(), Contract.MainView {
         }
     }
     private val adapter = GitHubUsersAdapter(onListItemClickListener)
-    private val presenter: Contract.IUserListPresenter = UserPresenter(App.INSTANCE.router)
+    private val presenter by moxyPresenter {
+        UserPresenter(App.INSTANCE.router)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentGitHubBinding.inflate(inflater, container, false)
         return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        presenter.onAttach(this)
     }
 
     private fun initRcView() = with(binding) {

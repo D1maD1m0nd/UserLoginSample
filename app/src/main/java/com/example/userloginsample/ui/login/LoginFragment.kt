@@ -10,26 +10,28 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.core.os.postDelayed
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import com.example.userloginsample.R
 import com.example.userloginsample.constants.AuthState
 import com.example.userloginsample.constants.LoginState
 import com.example.userloginsample.constants.PasswordState
 import com.example.userloginsample.databinding.FragmentLoginBinding
 import com.example.userloginsample.ui.App
+import moxy.MvpAppCompatFragment
+import moxy.ktx.moxyPresenter
 
 
-class LoginFragment : Fragment(), Contract.View {
+class LoginFragment : MvpAppCompatFragment(), Contract.View {
 
     private var _binding: FragmentLoginBinding? = null
     private val binding: FragmentLoginBinding
         get() = _binding!!
 
-    private var presenter: Contract.Presenter = EditAuthPresenter(App.INSTANCE.router)
+    private val presenter by moxyPresenter {
+        EditAuthPresenter(App.INSTANCE.router)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Retain this fragment across configuration changes.
         retainInstance = true
     }
 
@@ -44,7 +46,6 @@ class LoginFragment : Fragment(), Contract.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initPresenter()
         initView()
     }
 
@@ -79,18 +80,13 @@ class LoginFragment : Fragment(), Contract.View {
         }
     }
 
-    private fun initPresenter() {
-        presenter.onAttach(this)
-    }
-
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
     }
 
-    override fun setState(state: AuthState) = with(binding) {
+    override fun setState(state: AuthState): Unit = with(binding) {
         when (state) {
-
             AuthState.IDLE -> contentLayout.isVisible = true
             AuthState.ERROR -> this@LoginFragment.onStateError()
             AuthState.SUCCESS -> this@LoginFragment.onStateSuccess()

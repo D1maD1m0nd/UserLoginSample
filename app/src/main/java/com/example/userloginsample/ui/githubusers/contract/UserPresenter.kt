@@ -4,18 +4,18 @@ import com.example.userloginsample.constants.Screens
 import com.example.userloginsample.impl.UserRepositoryImpl
 import com.github.terrakok.cicerone.Router
 
-class UserPresenter(private val router: Router) : Contract.IUserListPresenter {
-    lateinit var view: Contract.MainView
+class UserPresenter(private val router: Router) : Contract.IUserListPresenter() {
+
     private val repo = UserRepositoryImpl()
-    override fun onAttach(v: Contract.MainView) {
-        view = v
-        view.init()
+    override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
+        viewState.init()
         updateUsers()
     }
 
     private fun updateUsers() {
         val list = repo.getUsers()
-        view.updateList(list)
+        viewState.updateList(list)
     }
 
     override fun openUserScreen(login: String) {

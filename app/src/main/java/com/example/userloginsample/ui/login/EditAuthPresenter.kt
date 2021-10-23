@@ -6,26 +6,23 @@ import com.example.userloginsample.impl.UserRepository
 import com.example.userloginsample.ui.App
 import com.github.terrakok.cicerone.Router
 
-class EditAuthPresenter(private val router: Router) : Contract.Presenter {
-    private lateinit var view: Contract.View
+class EditAuthPresenter(private val router: Router) : Contract.Presenter() {
     private var repo: UserRepository = App.userRepository
     private var state: AuthState = AuthState.IDLE
+
+    override fun onFirstViewAttach() {
+        viewState.setState(AuthState.IDLE)
+        super.onFirstViewAttach()
+    }
+
     override fun onOpenGitHubUserScreen() {
         router.navigateTo(Screens.gitHubUsers())
-    }
-
-    override fun onAttach(view: Contract.View) {
-        this.view = view
-        view.setState(state)
-    }
-
-    override fun onDetach() {
     }
 
     override fun onChangeLogin(login: String) {
         val state = validateLogin(login)
         if (state != LoginState.SUCCESS) {
-            view.setLoginError(state)
+            viewState.setLoginError(state)
         }
     }
 
@@ -41,7 +38,7 @@ class EditAuthPresenter(private val router: Router) : Contract.Presenter {
     override fun onChangePassword(password: String) {
         val state = validatePassword(password)
         if (state != PasswordState.SUCCESS) {
-            view.setPasswordError(state)
+            viewState.setPasswordError(state)
         }
 
     }
@@ -66,10 +63,10 @@ class EditAuthPresenter(private val router: Router) : Contract.Presenter {
         val validateLoginResult = validateLogin(login)
         val validatePasswordResult = validatePassword(password)
         if (validateLoginResult != LoginState.SUCCESS) {
-            view.setLoginError(validateLoginResult)
+            viewState.setLoginError(validateLoginResult)
         }
         if (validatePasswordResult != PasswordState.SUCCESS) {
-            view.setPasswordError(validatePasswordResult)
+            viewState.setPasswordError(validatePasswordResult)
         }
         return validateLoginResult != LoginState.INCORRECT_LOGIN && validatePasswordResult != PasswordState.INCORRECT_PASSWORD
     }
@@ -80,7 +77,7 @@ class EditAuthPresenter(private val router: Router) : Contract.Presenter {
         } else {
             AuthState.SUCCESS
         }
-        view.setState(state)
+        viewState.setState(state)
         this.state = state
     }
 }

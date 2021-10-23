@@ -46,6 +46,11 @@ class ProfileFragment : Fragment() {
         binding.loginTextView.text = user?.login
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     companion object {
         @JvmStatic
         fun newInstance(user: User) =
