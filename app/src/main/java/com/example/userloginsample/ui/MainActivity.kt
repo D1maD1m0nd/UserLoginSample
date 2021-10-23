@@ -1,126 +1,29 @@
 package com.example.userloginsample.ui
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.widget.EditText
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.postDelayed
-import androidx.core.view.isVisible
 import com.example.userloginsample.R
-import com.example.userloginsample.constants.AuthState
-import com.example.userloginsample.constants.LoginState
-import com.example.userloginsample.constants.PasswordState
+import com.example.userloginsample.constants.Screens
 import com.example.userloginsample.databinding.ActivityMainBinding
+import com.github.terrakok.cicerone.androidx.AppNavigator
+import moxy.MvpAppCompatActivity
 
-class MainActivity : AppCompatActivity(), Contract.View {
+class MainActivity : MvpAppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var presenter: Contract.Presenter
-
-
+    private val navigator = AppNavigator(this, R.id.fragment_container_view)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        init()
+        savedInstanceState ?: App.INSTANCE.router.newRootScreen(Screens.login())
     }
 
-    private fun init() {
-        initPresenter()
-        initView()
+    override fun onResumeFragments() {
+        super.onResumeFragments()
+        App.INSTANCE.navigatorHolder.setNavigator(navigator)
     }
 
-    private fun initPresenter() {
-        presenter = if (lastCustomNonConfigurationInstance is EditAuthPresenter) {
-            lastCustomNonConfigurationInstance as EditAuthPresenter
-        } else {
-            EditAuthPresenter()
-        }
-        presenter.onAttach(this)
+    override fun onPause() {
+        App.INSTANCE.navigatorHolder.removeNavigator()
+        super.onPause()
     }
-
-    private fun initView() = with(binding) {
-        initPasswordChangeListener()
-        initLoginChangeListener()
-        setOnLoginButtonClickListener()
-    }
-
-    private fun setOnLoginButtonClickListener() = with(binding) {
-        loginButton.setOnClickListener {
-            val login = loginEditText.text.toString()
-            val password = passwordEditText.text.toString()
-            presenter.onLogin(login, password)
-        }
-    }
-
-    private fun initPasswordChangeListener() = with(binding) {
-        passwordEditText.setOnFocusChangeListener { v, hasFocus: Boolean ->
-            if (!hasFocus) {
-                presenter.onChangePassword((v as EditText).text.toString())
-            }
-        }
-    }
-
-    private fun initLoginChangeListener() = with(binding) {
-        loginEditText.setOnFocusChangeListener { v, hasFocus: Boolean ->
-            if (!hasFocus) {
-                presenter.onChangeLogin((v as EditText).text.toString())
-            }
-        }
-    }
-
-    override fun setState(state: AuthState) = with(binding) {
-        when (state) {
-            AuthState.IDLE -> contentLayout.isVisible = true
-            AuthState.ERROR -> this@MainActivity.onStateError()
-            AuthState.SUCCESS -> this@MainActivity.onStateSuccess()
-            else -> null
-        }
-    }
-
-    private fun onStateError() = with(binding) {
-        contentLayout.isVisible = false
-        progressBar.isVisible = true
-        Handler(Looper.getMainLooper()).postDelayed(DELAY_TIME) {
-            Toast.makeText(
-                this@MainActivity,
-                getString(R.string.userNotFound),
-                Toast.LENGTH_SHORT
-            ).show()
-            contentLayout.isVisible = true
-            progressBar.isVisible = false
-        }
-    }
-
-    private fun onStateSuccess() = with(binding) {
-        contentLayout.isVisible = false
-        progressBar.isVisible = true
-        Handler(Looper.getMainLooper()).postDelayed(DELAY_TIME) {
-            Toast.makeText(
-                this@MainActivity,
-                getString(R.string.AuthSuccessMessage),
-                Toast.LENGTH_SHORT
-            ).show()
-            contentLayout.isVisible = false
-            progressBar.isVisible = false
-        }
-    }
-
-    override fun onRetainCustomNonConfigurationInstance(): Any? {
-        return presenter
-    }
-
-    override fun setPasswordError(code: PasswordState) = with(binding) {
-        passwordEditText.error = getString(R.string.IncorectPasswordError)
-    }
-
-    override fun setLoginError(code: LoginState) = with(binding) {
-        loginEditText.error = getString(R.string.LoginIncorrectError)
-    }
-
-    companion object {
-        const val DELAY_TIME = 3000L
-    }
-
 }

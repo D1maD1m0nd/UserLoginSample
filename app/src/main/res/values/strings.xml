@@ -10,4 +10,8 @@
     <string name="LoginIncorrectError">Логин должен состоять не менее чем из 4 символов и начинаться с не цифрового символа</string>
     <string name="userNotFound">ERROR указанный пользователь не найден</string>
     <string name="AuthSuccessMessage">Авторизация прошла успешно</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="profile">Profile</string>
+    <string name="repo">Репозитории</string>
 </resources>
