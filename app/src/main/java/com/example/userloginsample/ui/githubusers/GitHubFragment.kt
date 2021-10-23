@@ -8,18 +8,27 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.userloginsample.databinding.FragmentGitHubBinding
+import com.example.userloginsample.domain.User
+import com.example.userloginsample.ui.App
 import com.example.userloginsample.ui.App.Companion.userRepository
 import com.example.userloginsample.ui.githubusers.adapter.DiffUtilsUser
 import com.example.userloginsample.ui.githubusers.adapter.GitHubUsersAdapter
+import com.example.userloginsample.ui.githubusers.contract.Contract
+import com.example.userloginsample.ui.githubusers.contract.OnItemViewClickListener
+import com.example.userloginsample.ui.githubusers.contract.UserPresenter
 
 
-class GitHubFragment : Fragment() {
+class GitHubFragment : Fragment(), Contract.MainView {
     private var _binding: FragmentGitHubBinding? = null
     private val binding: FragmentGitHubBinding
         get() = _binding!!
-    private val adapter = GitHubUsersAdapter()
-    private val repo = userRepository
-
+    private val onListItemClickListener = object : OnItemViewClickListener {
+        override fun onItemViewClick(login: String) {
+            presenter.openUserScreen(login)
+        }
+    }
+    private val adapter = GitHubUsersAdapter(onListItemClickListener)
+    private val presenter: Contract.IUserListPresenter = UserPresenter(App.INSTANCE.router)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -30,14 +39,35 @@ class GitHubFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.listUserRcView.layoutManager = LinearLayoutManager(context)
-        binding.listUserRcView.adapter = adapter
-        binding.listUserRcView.setHasFixedSize(true)
+        presenter.onAttach(this)
+    }
+
+    private fun initRcView() = with(binding) {
+        listUserRcView.layoutManager = LinearLayoutManager(context)
+        listUserRcView.adapter = adapter
+        listUserRcView.setHasFixedSize(true)
+    }
+
+    private fun diff() {
         val newList = userRepository.getUsers()
         val oldList = adapter.list
         val utils = DiffUtilsUser(oldList, newList)
         val diffResult = DiffUtil.calculateDiff(utils)
         diffResult.dispatchUpdatesTo(adapter)
+    }
+
+    override fun init() {
+        initRcView()
+    }
+
+    override fun updateList(users: List<User>) {
+        adapter.setData(users)
+        diff()
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 
     companion object {

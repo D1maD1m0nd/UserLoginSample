@@ -7,9 +7,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.userloginsample.R
 import com.example.userloginsample.databinding.GitHubUserItemBinding
 import com.example.userloginsample.domain.User
+import com.example.userloginsample.ui.githubusers.contract.OnItemViewClickListener
 
-class GitHubUsersAdapter : RecyclerView.Adapter<GitHubUsersAdapter.UsersViewHolder>() {
+class GitHubUsersAdapter(private var onItemViewClickListener: OnItemViewClickListener?) :
+    RecyclerView.Adapter<GitHubUsersAdapter.UsersViewHolder>() {
     var list = ArrayList<User>(10)
+    fun setData(list: List<User>) {
+        this.list.addAll(list)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UsersViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(
@@ -33,6 +38,9 @@ class GitHubUsersAdapter : RecyclerView.Adapter<GitHubUsersAdapter.UsersViewHold
         private val binding = GitHubUserItemBinding.bind(view)
         fun bind(user: User) = with(binding) {
             userLoginTextView.text = user.login
+            view.setOnClickListener {
+                onItemViewClickListener?.onItemViewClick(user.login)
+            }
         }
     }
 }
