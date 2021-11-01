@@ -18,6 +18,6 @@ class DiffUtilsUser(private val oldList: List<User>, private val newList: List<U
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return false
+        return oldList[oldItemPosition].login == newList[newItemPosition].login
     }
 }

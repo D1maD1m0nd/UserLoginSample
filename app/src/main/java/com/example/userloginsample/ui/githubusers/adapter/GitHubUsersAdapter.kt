@@ -11,7 +11,7 @@ import com.example.userloginsample.ui.githubusers.contract.OnItemViewClickListen
 
 class GitHubUsersAdapter(private var onItemViewClickListener: OnItemViewClickListener?) :
     RecyclerView.Adapter<GitHubUsersAdapter.UsersViewHolder>() {
-    var list = ArrayList<User>(10)
+    var list: MutableList<User> = ArrayList<User>(10)
     fun setData(list: List<User>) {
         this.list.addAll(list)
     }

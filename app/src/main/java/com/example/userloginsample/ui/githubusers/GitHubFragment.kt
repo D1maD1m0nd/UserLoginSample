@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.userloginsample.databinding.FragmentGitHubBinding
 import com.example.userloginsample.domain.User
 import com.example.userloginsample.ui.App
-import com.example.userloginsample.ui.App.Companion.userRepository
 import com.example.userloginsample.ui.githubusers.adapter.DiffUtilsUser
 import com.example.userloginsample.ui.githubusers.adapter.GitHubUsersAdapter
 import com.example.userloginsample.ui.githubusers.contract.Contract
@@ -45,13 +44,14 @@ class GitHubFragment : MvpAppCompatFragment(), Contract.UsersView {
         listUserRcView.layoutManager = LinearLayoutManager(context)
         listUserRcView.adapter = adapter
         listUserRcView.setHasFixedSize(true)
+        adapter.setData(mutableListOf(User("USERLOGIN", "USERPASSWORDDDD")))
     }
 
-    private fun diff() {
-        val newList = userRepository.getUsers()
+    private fun diff(newList: List<User>) {
         val oldList = adapter.list
         val utils = DiffUtilsUser(oldList, newList)
         val diffResult = DiffUtil.calculateDiff(utils)
+        adapter.list.addAll(newList)
         diffResult.dispatchUpdatesTo(adapter)
     }
 
@@ -60,8 +60,7 @@ class GitHubFragment : MvpAppCompatFragment(), Contract.UsersView {
     }
 
     override fun updateList(users: List<User>) {
-        adapter.setData(users)
-        diff()
+        diff(users)
     }
 
     override fun onDestroyView() {

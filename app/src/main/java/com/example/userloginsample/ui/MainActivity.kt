@@ -2,8 +2,8 @@ package com.example.userloginsample.ui
 
 import android.os.Bundle
 import com.example.userloginsample.R
-import com.example.userloginsample.constants.Screens
 import com.example.userloginsample.databinding.ActivityMainBinding
+import com.example.userloginsample.utils.Screens
 import com.github.terrakok.cicerone.androidx.AppNavigator
 import moxy.MvpAppCompatActivity
 
