@@ -1,4 +1,4 @@
-package com.example.userloginsample.constants
+package com.example.userloginsample.utils
 
 import com.example.userloginsample.domain.User
 import com.example.userloginsample.ui.githubusers.GitHubFragment
