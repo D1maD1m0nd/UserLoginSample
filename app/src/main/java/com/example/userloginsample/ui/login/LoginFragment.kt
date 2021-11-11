@@ -11,11 +11,9 @@ import android.widget.Toast
 import androidx.core.os.postDelayed
 import androidx.core.view.isVisible
 import com.example.userloginsample.R
-import com.example.userloginsample.constants.AuthState
-import com.example.userloginsample.constants.LoginState
-import com.example.userloginsample.constants.PasswordState
 import com.example.userloginsample.databinding.FragmentLoginBinding
 import com.example.userloginsample.ui.App
+import com.example.userloginsample.utils.Screens
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 
@@ -50,10 +48,17 @@ class LoginFragment : MvpAppCompatFragment(), Contract.View {
     }
 
 
-    private fun initView() = with(binding) {
+    private fun initView() {
         initPasswordChangeListener()
         initLoginChangeListener()
         setOnLoginButtonClickListener()
+        setOnEventBusButtonClickListener()
+    }
+
+    private fun setOnEventBusButtonClickListener() {
+        binding.eventBusButton.setOnClickListener {
+            App.INSTANCE.router.navigateTo(Screens.eventBus())
+        }
     }
 
     private fun setOnLoginButtonClickListener() = with(binding) {
@@ -85,20 +90,20 @@ class LoginFragment : MvpAppCompatFragment(), Contract.View {
         super.onDestroyView()
     }
 
-    override fun setState(state: AuthState): Unit = with(binding) {
+    override fun setState(state: Contract.AuthState): Unit = with(binding) {
         when (state) {
-            AuthState.IDLE -> contentLayout.isVisible = true
-            AuthState.ERROR -> this@LoginFragment.onStateError()
-            AuthState.SUCCESS -> this@LoginFragment.onStateSuccess()
-            else -> null
+            Contract.AuthState.IDLE -> contentLayout.isVisible = true
+            Contract.AuthState.ERROR -> this@LoginFragment.onStateError()
+            Contract.AuthState.SUCCESS -> this@LoginFragment.onStateSuccess()
+            else -> Unit
         }
     }
 
-    override fun setPasswordError(code: PasswordState) = with(binding) {
+    override fun setPasswordError(code: Contract.PasswordState) = with(binding) {
         passwordEditText.error = getString(R.string.IncorectPasswordError)
     }
 
-    override fun setLoginError(code: LoginState) = with(binding) {
+    override fun setLoginError(code: Contract.LoginState) = with(binding) {
         loginEditText.error = getString(R.string.LoginIncorrectError)
     }
 
